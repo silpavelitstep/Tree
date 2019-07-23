@@ -18,12 +18,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="tree.cpp">
+    <ClCompile Include="inner.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tree.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="inner.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
