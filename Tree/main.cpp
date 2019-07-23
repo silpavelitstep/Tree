@@ -7,14 +7,14 @@
 //#include <stdio.h>
 #include "tree.h"
 using namespace std;
-//Турнирная таблица
+//РўСѓСЂРЅРёСЂРЅР°СЏ С‚Р°Р±Р»РёС†Р°
 Tree tournament;
 void Game(char Commands[][20], int N)
 {
 	int i, j;
-	int p1, p2; //Счет
-	//Каждая команда играет с каждой по 2 раза -
-	//дома и в гостях
+	int p1, p2; //РЎС‡РµС‚
+	//РљР°Р¶РґР°СЏ РєРѕРјР°РЅРґР° РёРіСЂР°РµС‚ СЃ РєР°Р¶РґРѕР№ РїРѕ 2 СЂР°Р·Р° -
+	//РґРѕРјР° Рё РІ РіРѕСЃС‚СЏС…
 	int k;
 	Elem* temp;
 	for (k = 0; k < 2; k++)
@@ -23,56 +23,62 @@ void Game(char Commands[][20], int N)
 			for (j = i + 1; j < N; j++)
 			{
 				temp = new Elem;
-				if (k == 0)
+				if (k == 0)//1 РёРіСЂР°
 				{
-					//1 игра
-					strcpy(temp->Name, Commands[i]);
-					strcpy(temp->Opponent, Commands[j]);
+					strcpy(temp->inn->Name, Commands[i]);
+					strcpy(temp->inn->Opponent, Commands[j]);
 				}
-				else
+				else//2 РёРіСЂР°
 				{
-					//2 игра
-					strcpy(temp->Name, Commands[j]);
-					strcpy(temp->Opponent, Commands[i]);
+					strcpy(temp->inn->Name, Commands[j]);
+					strcpy(temp->inn->Opponent, Commands[i]);
 				}
 				p1 = rand() % 6;
 				p2 = rand() % 6;
 				if (p1 > p2)
 				{
-					temp->OwnerPoints = 3;
-					temp->OppPoints = 0;
+					temp->inn->OwnerPoints = 3;
+					temp->inn->OppPoints = 0;
 				}
 				else if (p1 == p2)
 				{
-					temp->OwnerPoints = 1;
-					temp->OppPoints = 1;
+					temp->inn->OwnerPoints = 1;
+					temp->inn->OppPoints = 1;
+					
 				}
 				else
 				{
-					temp->OwnerPoints = 0;
-					temp->OppPoints = 3;
+					temp->inn->OwnerPoints = 0;
+					temp->inn->OppPoints = 3;
 				}
-				//Запись счета
-				sprintf(temp->Match, " %d : %d ", p1, p2);
-				//Добавление записи
+				//Р—Р°РїРёСЃСЊ СЃС‡РµС‚Р°
+
+				sprintf(temp->inn->Match, " %d : %d ", p1, p2);
+				//Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё
 				tournament.Insert(temp);
 			}
 		}
 }
-int main()
-{
+void table() {
 	srand(time(0));
 	const int N = 4;
-	char Commands[4][20] =
+	char Commands[N][20] =
 	{
 	"Arsenal",
 	"Liverpool",
 	"Lids United",
 	"Manchester United"
 	};
-	//Игра
+	//РРіСЂР°
 	Game(Commands, N);
-	//Вывод результатов
-	tournament.Print(tournament.GetRoot());
+	//Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
+	//tournament.Print(tournament.GetRoot());
+}
+int main()
+{
+	for(int i=1;i<=3;i++)
+		table();
+	
+	system("pause");
 	return 0;
 }

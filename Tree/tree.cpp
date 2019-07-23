@@ -2,14 +2,40 @@
 #include "tree.h"
 #include <iostream>
 using namespace std;
-
+void Inner::print() {
+	cout << Name << Match << Opponent << endl;
+}
+bool Inner::operator!=(const Inner& right) {
+	return strcmp(this->Name, right.Name);//strcmp==0 if equals, "!=" return true if this->Name != left.Name  
+}
+bool Inner::operator<(const Inner& right) {
+	return strcmp(this->Name, right.Name) < 0;
+}
+Inner& Inner::operator=(const Inner& right) {
+	strcpy(this->Match, right.Match);
+	strcpy(this->Name, right.Name);
+	strcpy(this->Opponent, right.Opponent);
+	this->OwnerPoints = right.OwnerPoints;
+	this->OppPoints = right.OppPoints;
+	return *this;
+}
+Inner::Inner() {
+	cout << "new Inner: " << (int)this << endl;
+}
+Inner::~Inner() {
+	cout << "free Inner: " << (int)this << endl;
+}
+//////////////////////////////////////
 Tree::Tree()
 {
 	root = 0;
+	//cout << "new Tree: " << (int)this << endl;
 }
 Tree::~Tree()
 {
+	//cout << "del Tree: " << (int)this << endl;
 	Del();
+
 }
 //Рекурсивный обход дерева
 void Tree::Print(Elem* Node)
@@ -17,19 +43,16 @@ void Tree::Print(Elem* Node)
 	if (Node != 0)
 	{
 		Print(Node->left);
-		cout << Node->Name
-			<< Node->Match
-			<< Node->Opponent
-			<< endl;
+		Node->inn->print();
 		Print(Node->right);
 	}
 }
-Elem* Tree::Search(Elem* Node, char* k)
+Elem* Tree::Search(Elem* Node, Inner *key)
 {
 	//Пока есть узлы и ключи не совпадают
-	while (Node != 0 && strcmp(k, Node->Name) != 0)
+	while (Node != 0 && *key != *(Node->inn) )
 	{
-		if (strcmp(k, Node->Name) < 0)
+		if (*key < *(Node->inn) )
 			Node = Node->left;
 		else
 			Node = Node->right;
@@ -55,7 +78,7 @@ Elem* Tree::Max(Elem* Node)
 Elem* Tree::Next(Elem* Node)
 {
 	Elem* y = 0;
-	if (Node != 0)
+	if (Node)
 	{
 		//если есть правый потомок
 		if (Node->right != 0)
@@ -96,6 +119,9 @@ Elem* Tree::GetRoot()
 {
 	return root;
 }
+bool Elem::operator<(const Elem& right) {
+	return *(this->inn) < *(right.inn);
+}
 void Tree::Insert(Elem* z)
 {
 	//потомков нет
@@ -108,7 +134,7 @@ void Tree::Insert(Elem* z)
 	{
 		//будущий родитель
 		y = Node;
-		if (strcmp(z->Name, Node->Name) < 0)
+		if (*z < *Node)//*(this->inn) < *(right.inn)
 			Node = Node->left;
 		else
 			Node = Node->right;
@@ -118,7 +144,7 @@ void Tree::Insert(Elem* z)
 	if (y == 0) //элемент первый (единственный)
 		root = z;
 	//чей ключ больше?
-	else if (strcmp(z->Name, y->Name) < 0)
+	else if (*z < *y)
 		y->left = z;
 	else
 		y->right = z;
@@ -126,19 +152,19 @@ void Tree::Insert(Elem* z)
 void Tree::Del(Elem* z)
 {
 	//удаление куста
-	if (z != 0)
+	if (z)
 	{
 		Elem *Node, *y;
 		//не 2 ребенка
-		if (z->left == 0 || z->right == 0)//one or nothing child
+		if (z->left == 0 || z->right == 0)//one child or nobody
 			y = z;
 		else
 			y = Next(z);//two children/////////////////
-		if (y->left != 0)
+		if (y->left)
 			Node = y->left;
 		else
 			Node = y->right;
-		if (Node != 0)
+		if (Node)
 			Node->parent = y->parent;
 		//Удаляется корневой узел?
 		if (y->parent == 0)
@@ -148,18 +174,23 @@ void Tree::Del(Elem* z)
 		else
 			//справа от родителя?
 			y->parent->right = Node;
+		//Копирование данных узла
 		if (y != z)
-		{
-			//Копирование данных узла
-			strcpy(z->Name, y->Name);
-			strcpy(z->Opponent, y->Opponent);
-			strcpy(z->Match, y->Match);
-			z->OppPoints = y->OppPoints;
-			z->OwnerPoints = y->OwnerPoints;
-		}
+			*(z->inn) = *(y->inn);
+				
 		delete y;
 	}
 	else //удаление всего дерева z=0
-		while (root != 0)
+		while (root)
 			Del(root);
 }
+Elem::Elem() {
+	inn = new Inner;
+	//cout << "new Elem: " << (int)this << endl;
+}
+Elem::~Elem() {
+	//cout << "del Elem: " << (int)this << endl;
+	delete inn;
+}
+
+

@@ -1,15 +1,28 @@
 #pragma once
 #ifndef TREE_H
 #define TREE_H
-struct Elem
-{
-	
+struct Inner {
+	//data
 	int OwnerPoints; //Очки хозяина
 	int OppPoints; //Очки соперника
 	char Match[10]; //Счет
 	char Name[20]; //Команда
 	char Opponent[20]; //Соперник
+	//methods
+	void print();
+	Inner();
+	~Inner();
+	bool operator!=(const Inner&);
+	bool operator<(const Inner&);
+	Inner& operator=(const Inner&);
+};
+struct Elem
+{
+	Inner* inn;
 	Elem* left, * right, * parent;
+	bool operator<(const Elem &);
+	Elem();
+	~Elem();
 };
 class Tree
 {
@@ -21,7 +34,7 @@ public:
 	//печать от указанного узла
 	void Print(Elem* Node);
 	//поиск от указанного узла
-	Elem* Search(Elem* Node, char* key);
+	Elem* Search(Elem* Node, Inner *key);
 	//min от указанного узла
 	Elem* Min(Elem* Node);
 	//max от указанного узла
